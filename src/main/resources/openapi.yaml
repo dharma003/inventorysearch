@@ -1,0 +1,89 @@
+openapi: 3.0.3
+info:
+  title: Inventory Search API
+  version: 1.0.0
+  description: Search inventory with optional AND filters
+
+paths:
+  /api/v1/inventories:
+    get:
+      summary: Search inventories
+      parameters:
+        - in: query
+          name: name
+          schema:
+            type: string
+        - in: query
+          name: category
+          schema:
+            type: string
+        - in: query
+          name: minPrice
+          schema:
+            type: number
+            format: decimal
+        - in: query
+          name: maxPrice
+          schema:
+            type: number
+            format: decimal
+        - in: query
+          name: manufacturedFrom
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: manufacturedTo
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: page
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: size
+          schema:
+            type: integer
+            default: 20
+
+      responses:
+        '200':
+          description: Successful search
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InventoryPage'
+
+components:
+  schemas:
+    Inventory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        category:
+          type: string
+        subCategory:
+          type: string
+        price:
+          type: number
+          format: decimal
+        stock:
+          type: integer
+
+    InventoryPage:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Inventory'
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
